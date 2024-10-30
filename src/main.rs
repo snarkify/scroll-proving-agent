@@ -1,13 +1,13 @@
 use clap::Parser;
 use scroll_proving_sdk::{config::Config, prover::ProverBuilder, utils::init_tracing};
-use snarkify_scroll_proving_sdk::prover::SnarkifyProver;
+use snarkify_scroll_proving::prover::SnarkifyProver;
 
 #[derive(Parser, Debug)]
 #[clap(disable_version_flag = true)]
 struct Args {
     /// Path to the configuration file in JSON format.
     /// Regarding the JSON format, please refer to the README.md for the configuration file template in
-    /// https://github.com/snarkify/snarkify-scroll-proving-sdk
+    /// https://github.com/snarkify/snarkify-scroll-proving
     #[arg(long = "config", default_value = "config.json")]
     config_file: String,
     /// Unique UUID for the service in Snarkify platform.

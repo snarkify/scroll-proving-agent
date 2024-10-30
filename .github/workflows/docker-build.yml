@@ -27,4 +27,4 @@ jobs:
         context: .
         file: docker/Dockerfile
         push: true
-        tags: snarkify/snarkify-scroll-proving-sdk:${{ github.ref_name }},snarkify/snarkify-scroll-proving-sdk:latest
+        tags: snarkify/snarkify-scroll-proving:${{ github.ref_name }},snarkify/snarkify-scroll-proving:latest

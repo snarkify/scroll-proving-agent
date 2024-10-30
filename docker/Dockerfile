@@ -17,7 +17,7 @@ FROM ubuntu:20.04
 RUN apt-get update && apt-get install -y libssl-dev && rm -rf /var/lib/apt/lists/*
 
 # Copy the built binary from the builder stage
-COPY --from=builder /usr/src/app/target/release/snarkify-scroll-proving-sdk /usr/local/bin/snarkify-scroll-proving-sdk
+COPY --from=builder /usr/src/app/target/release/snarkify-scroll-proving /usr/local/bin/snarkify-scroll-proving
 
 # Set the entrypoint
-ENTRYPOINT ["snarkify-scroll-proving-sdk"]
+ENTRYPOINT ["snarkify-scroll-proving"]

@@ -1,21 +1,21 @@
-# Snarkify Scroll Proving SDK
+# Snarkify Scroll Proving
 
 ## Introduction
 
-The Snarkify Scroll Proving SDK is a high-performance binary, built on [Snarkify](https://snarkify.io/), designed for efficient block proving within the [Scroll SDK](https://scroll-sdk-init.docs.scroll.xyz/en/sdk/). Leveraging Snarkify’s expertise in zero-knowledge GPU acceleration, this SDK provides an easy-to-use, cost-effective solution for block proving.
+The Snarkify Scroll Proving is a high-performance binary, built on [Snarkify](https://snarkify.io/), designed for efficient block proving within the [Scroll SDK](https://scroll-sdk-init.docs.scroll.xyz/en/sdk/). Leveraging Snarkify’s expertise in zero-knowledge GPU acceleration, it provides an easy-to-use, cost-effective solution for block proving.
 
 ## How It Works
 
-The Snarkify Scroll Proving SDK integrates with the [Scroll Proving SDK](https://github.com/scroll-tech/scroll-proving-sdk) to handle block proving in three main steps:
+The Snarkify Scroll Proving binary integrates with the [Scroll Proving SDK](https://github.com/scroll-tech/scroll-proving-sdk) to handle block proving in three main steps:
 
-	1.	Task Retrieval: The SDK connects to the coordinator endpoint to retrieve proving tasks and to the Geth endpoint for block trace data required for chunk tasks.
+	1.	Task Retrieval: The binary connects to the coordinator endpoint to retrieve proving tasks and to the Geth endpoint for block trace data required for chunk tasks.
 	2.	Proof Generation: Each task is dispatched to the Snarkify platform, where proofs are generated.
-	3.	Task Completion: The SDK periodically checks the task’s status on the Snarkify platform and, once complete, submits the proof back to the coordinator.
+	3.	Task Completion: The binary periodically checks the task’s status on the Snarkify platform and, once complete, submits the proof back to the coordinator.
 
 ## Getting Started
 
 ### Install Helm Chart
-To deploy the SDK, you’ll need Helm. Install Helm with:
+To deploy the binary, you’ll need Helm. Install Helm with:
 ```bash
 curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 ```
@@ -23,14 +23,14 @@ curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 ### Create an API Key
 You’ll need an API key to authenticate. Follow the steps [here](https://docs.snarkify.io/gpu-prover-network/deploy-a-elastic-proving-service#create-an-api-key) to obtain one.
 
-### Set Up Scroll SDK Service
-Set up a Scroll SDK service and obtain its service ID. If you need assistance, contact us on [Telegram](https://t.me/+WRhRjNL6zixjNWUx).
+### Set Up Scroll Proving Service
+Set up a Scroll Proving service and obtain its service ID. If you need assistance, contact us on [Telegram](https://t.me/+WRhRjNL6zixjNWUx).
 
-### Deploy the Proving SDK
+### Deploy the Snarkify Scroll Proving Binary
 After obtaining your service ID, deploy the prover using Helm. (Note: Deployment details will be updated once the Helm chart is published.)
 
 ### Configuration
-Configure the SDK using the template below, replacing placeholders as needed:
+Configure the binary using the template below, replacing placeholders as needed:
 ```json
 {
     "prover_name_prefix": "snarkify_",
