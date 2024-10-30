@@ -43,7 +43,8 @@ where
 #[clap(disable_version_flag = true)]
 struct Args {
     /// Path to the configuration file in JSON format.
-    /// Please refer to config.json in https://github.com/snarkify/scroll-proving-sdk
+    /// Regarding the JSON format, please refer to the README.md for the configuration file template in
+    /// https://github.com/snarkify/snarkify-scroll-proving-sdk
     #[arg(long = "config", default_value = "config.json")]
     config_file: String,
     /// Unique UUID for the service in Snarkify platform.
@@ -53,7 +54,7 @@ struct Args {
 
 #[derive(Deserialize, Debug)]
 pub struct SnarkifyGetTaskResponse {
-    /// Task UUID in Snarkify platform.
+    /// Task ID in Snarkify platform. It can be UUID or an empty string.
     pub task_id: String,
     #[serde(deserialize_with = "deserialize_datetime")]
     pub created: Option<DateTime<Utc>>,
@@ -64,16 +65,15 @@ pub struct SnarkifyGetTaskResponse {
     pub state: SnarkifyTaskState,
     /// Task input data necessary for the proof generation.
     pub input: String,
-    /// Task proof.
+    /// Serialized JSON string including the base64 encoded proof and its metadata.
     pub proof: Option<String>,
-    /// Task error message.
     pub error: Option<String>,
     pub proof_type: Option<SnarkifyProofType>,
 }
 
 #[derive(Deserialize, Debug)]
 pub struct SnarkifyGetVkResponse {
-    /// Verifying key.
+    /// Base64 encoded verification key.
     pub vk: String,
 }
 
@@ -313,7 +313,8 @@ impl SnarkifyProver {
 
     fn build_url(&self, method: &str) -> anyhow::Result<Url> {
         let full_url = format!("{}{}", self.base_url, method);
-        Url::parse(&full_url).map_err(|e| anyhow::anyhow!(e))
+        Url::parse(&full_url)
+            .map_err(|e| anyhow::anyhow!("Failed to parse URL '{}': {}", full_url, e))
     }
 
     async fn get_with_token<Resp>(&self, method: &str) -> anyhow::Result<Resp>
