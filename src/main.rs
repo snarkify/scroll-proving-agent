@@ -18,26 +18,14 @@ use scroll_proving_sdk::{
     utils::init_tracing,
 };
 
-use chrono::{DateTime, NaiveDateTime, Utc};
-use serde::{Deserialize, Deserializer, Serialize};
+use serde::Serialize;
+use snarkify_scroll_proving_sdk::types::{
+    SnarkifyCreateTaskInput, SnarkifyCreateTaskRequest, SnarkifyGetTaskResponse,
+    SnarkifyGetVkResponse,
+};
 
 /// API version used by the Snarkify platform.
 const API_VERSION: &'static str = "v1";
-
-fn deserialize_datetime<'de, D>(deserializer: D) -> Result<Option<DateTime<Utc>>, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    // The datetimes from the Snarkify API does not provide timezone information,
-    // so we assume it is UTC.
-    let s: Option<String> = Option::deserialize(deserializer)?;
-    s.map(|s| {
-        NaiveDateTime::parse_from_str(&s, "%Y-%m-%dT%H:%M:%S")
-            .map(|dt| DateTime::<Utc>::from_naive_utc_and_offset(dt, Utc))
-            .map_err(serde::de::Error::custom)
-    })
-    .transpose()
-}
 
 #[derive(Parser, Debug)]
 #[clap(disable_version_flag = true)]
@@ -50,96 +38,6 @@ struct Args {
     /// Unique UUID for the service in Snarkify platform.
     #[arg(long = "service-id")]
     service_id: String,
-}
-
-#[derive(Deserialize, Debug)]
-pub struct SnarkifyGetTaskResponse {
-    /// Task ID in Snarkify platform. It can be UUID or an empty string.
-    pub task_id: String,
-    #[serde(deserialize_with = "deserialize_datetime")]
-    pub created: Option<DateTime<Utc>>,
-    #[serde(deserialize_with = "deserialize_datetime")]
-    pub started: Option<DateTime<Utc>>,
-    #[serde(deserialize_with = "deserialize_datetime")]
-    pub finished: Option<DateTime<Utc>>,
-    pub state: SnarkifyTaskState,
-    /// Task input data necessary for the proof generation.
-    pub input: String,
-    /// Serialized JSON string including the base64 encoded proof and its metadata.
-    pub proof: Option<String>,
-    pub error: Option<String>,
-    pub proof_type: Option<SnarkifyProofType>,
-}
-
-#[derive(Deserialize, Debug)]
-pub struct SnarkifyGetVkResponse {
-    /// Base64 encoded verification key.
-    pub vk: String,
-}
-
-#[derive(Deserialize, Debug)]
-#[serde(rename_all = "UPPERCASE")]
-pub enum SnarkifyTaskState {
-    Pending,
-    Success,
-    Failure,
-}
-
-impl From<SnarkifyTaskState> for TaskStatus {
-    fn from(state: SnarkifyTaskState) -> Self {
-        match state {
-            SnarkifyTaskState::Pending => TaskStatus::Proving,
-            SnarkifyTaskState::Success => TaskStatus::Success,
-            SnarkifyTaskState::Failure => TaskStatus::Failed,
-        }
-    }
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "UPPERCASE")]
-pub enum SnarkifyProofType {
-    Chunk,
-    Batch,
-    Bundle,
-}
-
-impl From<CircuitType> for SnarkifyProofType {
-    fn from(circuit_type: CircuitType) -> Self {
-        match circuit_type {
-            CircuitType::Chunk => SnarkifyProofType::Chunk,
-            CircuitType::Batch => SnarkifyProofType::Batch,
-            CircuitType::Bundle => SnarkifyProofType::Bundle,
-            CircuitType::Undefined => unreachable!("CircuitType::Undefined should not be used"),
-        }
-    }
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct SnarkifyCreateTaskInput {
-    pub circuit_type: CircuitType,
-    pub circuit_version: String,
-    pub hard_fork_name: String,
-    pub task_data: String,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct SnarkifyCreateTaskRequest {
-    pub input: SnarkifyCreateTaskInput,
-    pub proof_type: SnarkifyProofType,
-}
-
-impl SnarkifyCreateTaskRequest {
-    pub fn from_prove_request(request: &ProveRequest) -> Self {
-        Self {
-            input: SnarkifyCreateTaskInput {
-                circuit_type: request.circuit_type,
-                circuit_version: request.circuit_version.clone(),
-                hard_fork_name: request.hard_fork_name.clone(),
-                task_data: request.input.clone(),
-            },
-            proof_type: request.circuit_type.into(),
-        }
-    }
 }
 
 struct SnarkifyProver {
