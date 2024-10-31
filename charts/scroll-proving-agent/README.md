@@ -37,7 +37,7 @@ Kubernetes: `>=1.22.0-0`
 | image.tag | string | `"v0.0.1"` |  |
 | persistence.config.enabled | bool | `true` |  |
 | persistence.config.mountPath | string | `"/sdk_prover/"` |  |
-| persistence.config.name | string | `"scroll-proving-agent-config"` |  |
+| persistence.config.name | string | `"{{ .Release.Name }}-config"` |  |
 | persistence.config.type | string | `"configMap"` |  |
 | persistence.keys.accessMode | string | `"ReadWriteOnce"` |  |
 | persistence.keys.enabled | bool | `true` |  |
