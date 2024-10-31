@@ -1,6 +1,6 @@
 use clap::Parser;
 use scroll_proving_sdk::{config::Config, prover::ProverBuilder, utils::init_tracing};
-use snarkify_scroll_proving::prover::SnarkifyProver;
+use snarkify_scroll_proving_agent::prover::SnarkifyProver;
 use std::env;
 
 #[derive(Parser, Debug)]
