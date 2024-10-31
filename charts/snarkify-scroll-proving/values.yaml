@@ -26,7 +26,7 @@ persistence:
     enabled: true
     type: configMap
     mountPath: /sdk_prover/
-    name: snarkify-scroll-proving-config 
+    name: snarkify-scroll-proving-config
   keys:
     enabled: true
     type: pvc
