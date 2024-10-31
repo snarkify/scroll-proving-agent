@@ -12,5 +12,3 @@ dependencies:
     repository: "oci://ghcr.io/scroll-tech/scroll-sdk/helm"
     version: 1.5.1
 type: application
-
-

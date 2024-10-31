@@ -1,7 +1,7 @@
 use clap::Parser;
 use scroll_proving_sdk::{config::Config, prover::ProverBuilder, utils::init_tracing};
-use snarkify_scroll_proving::config::SnarkifyConfig;
 use snarkify_scroll_proving::prover::SnarkifyProver;
+use std::env;
 
 #[derive(Parser, Debug)]
 #[clap(disable_version_flag = true)]
@@ -19,13 +19,14 @@ async fn main() -> anyhow::Result<()> {
 
     let args = Args::parse();
     let cfg: Config = Config::from_file(args.config_file.clone())?;
-    let snarkify_cfg: SnarkifyConfig = SnarkifyConfig::from_file(args.config_file.clone())?;
+    let service_id = env::var("serviceId")
+        .map_err(|e| anyhow::anyhow!("Failed to load serviceId with error {e}"))?;
     let cloud_prover = SnarkifyProver::new(
         cfg.prover
             .cloud
             .clone()
             .ok_or_else(|| anyhow::anyhow!("Missing cloud prover configuration"))?,
-        snarkify_cfg.service_id,
+        service_id,
     );
     let prover = ProverBuilder::new(cfg)
         .with_proving_service(Box::new(cloud_prover))

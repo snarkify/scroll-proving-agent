@@ -11,7 +11,7 @@ image:
 command:
   - "/bin/sh"
   - "-c"
-  - "exec snarkify-scroll-proving --config /sdk_prover/config.json"
+  - "exec snarkify-scroll-proving --config /sdk_prover/config.json $serviceId"
 
 resources:
   requests:
@@ -87,3 +87,6 @@ scrollConfig: |
 #   },
 #   "service_id": ""
 #  }
+
+env:
+  serviceId: ""
