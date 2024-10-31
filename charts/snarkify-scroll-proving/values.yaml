@@ -63,7 +63,7 @@ scrollConfig: |
   {}
 #  {
 #   "prover_name_prefix": "snarkify_",
-#   "keys_dir": "keys",
+#   "keys_dir": "/keys",
 #   "coordinator": {
 #     "base_url": "https://coordinator-api.scrollsdk",
 #     "retry_count": 3,
