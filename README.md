@@ -39,7 +39,9 @@ Set up a Scroll Proving service and obtain its service ID. Please contact us on 
 if you want to set up a service.
 
 ### Prepare the Configuration
-Create a `config.yaml` file using the template below, replacing placeholders as needed:
+There are 3 types of block proving in Scroll SDK: Chunk, Batch and Bundle, so you need to create 3 different 
+configuration files `chunk-config.yaml`, `batch-config.yaml` and `bundle-config.yaml`.
+Here is the example of `chunk-config.yaml`, replacing placeholders as needed:
 ```yaml
 scrollConfig: |
   {
@@ -55,7 +57,7 @@ scrollConfig: |
       "endpoint": "<Your-Geth-Endpoint>"
     },
     "prover": {
-      "circuit_type": <Your-Circuit-Type>,
+      "circuit_type": 1,
       "circuit_version": "v0.13.1",
       "n_workers": <Your-Number-Of-Workers>,
       "cloud": {
@@ -83,10 +85,14 @@ env:
 
 ### Deploy Snarkify Scroll Proving
 
-Deploy the prover using Helm. 
+Deploy the prover using Helm with your configuration files.
 ```bash
 export HELM_EXPERIMENTAL_OCI=1
-helm install snarkify-scroll-proving oci://ghcr.io/snarkify/snarkify-scroll-proving/helm/snarkify-scroll-proving --version 0.0.1 -f config.yaml
+helm install snarkify-scroll-proving-chunk oci://ghcr.io/snarkify/snarkify-scroll-proving/helm/snarkify-scroll-proving --version 0.0.1 -f chunk-config.yaml
+
+helm install snarkify-scroll-proving-batch oci://ghcr.io/snarkify/snarkify-scroll-proving/helm/snarkify-scroll-proving --version 0.0.1 -f batch-config.yaml
+
+helm install snarkify-scroll-proving-bundle oci://ghcr.io/snarkify/snarkify-scroll-proving/helm/snarkify-scroll-proving --version 0.0.1 -f bundle-config.yaml
 ```
 
 ### Verify the Deployment
@@ -98,7 +104,9 @@ kubectl logs -l app.kubernetes.io/name=snarkify-scroll-proving
 
 ### Uninstall the Helm Chart
 ```bash
-helm uninstall snarkify-scroll-proving
+helm uninstall snarkify-scroll-proving-chunk
+helm uninstall snarkify-scroll-proving-batch
+helm uninstall snarkify-scroll-proving-bundle
 ```
 
 ### Pricing

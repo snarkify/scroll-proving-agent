@@ -26,4 +26,3 @@ keys/
 
 # Helm chart related
 *.lock
-*.tgz
