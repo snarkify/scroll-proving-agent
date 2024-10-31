@@ -26,4 +26,4 @@ scrollConfig: |
   }
 
 env:
-  serviceId: ""
+  serviceId: "<SERVICE_ID>"

@@ -7,8 +7,8 @@ use std::env;
 #[clap(disable_version_flag = true)]
 struct Args {
     /// Path to the configuration file in JSON format.
-    /// Regarding the JSON format, please refer to the README.md for the configuration file template in
-    /// https://github.com/snarkify/snarkify-scroll-proving
+    /// Regarding the JSON format, please refer to the README.md for the Configuration section in
+    /// https://github.com/snarkify/snarkify-scroll-proving-agent
     #[arg(long = "config", default_value = "config.json")]
     config_file: String,
 }

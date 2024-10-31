@@ -1,8 +1,8 @@
-# snarkify-scroll-proving
+# snarkify-scroll-proving-agent
 
 ![Version: 0.0.1](https://img.shields.io/badge/Version-0.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
-A chart for Scroll SDK to generate proofs in Snarkify platform.
+A proving agent for Scroll SDK to generate proofs in Snarkify platform.
 
 ## Maintainers
 
@@ -24,20 +24,20 @@ Kubernetes: `>=1.22.0-0`
 |-----|------|---------|-------------|
 | command[0] | string | `"/bin/sh"` |  |
 | command[1] | string | `"-c"` |  |
-| command[2] | string | `"exec snarkify-scroll-proving --config /sdk_prover/config.json"` |  |
+| command[2] | string | `"exec snarkify-scroll-proving-agent --config /sdk_prover/config.json"` |  |
 | defaultProbes.custom | bool | `true` |  |
 | defaultProbes.enabled | bool | `true` |  |
 | defaultProbes.spec.httpGet.path | string | `"/"` |  |
 | defaultProbes.spec.httpGet.port | int | `80` |  |
 | env.serviceId | string | `""` |  |
-| global.fullnameOverride | string | `"snarkify-scroll-proving"` |  |
-| global.nameOverride | string | `"snarkify-scroll-proving"` |  |
+| global.fullnameOverride | string | `"snarkify-scroll-proving-agent"` |  |
+| global.nameOverride | string | `"snarkify-scroll-proving-agent"` |  |
 | image.pullPolicy | string | `"Always"` |  |
-| image.repository | string | `"snarkify/snarkify-scroll-proving"` |  |
+| image.repository | string | `"snarkify/snarkify-scroll-proving-agent"` |  |
 | image.tag | string | `"v0.0.1"` |  |
 | persistence.config.enabled | bool | `true` |  |
 | persistence.config.mountPath | string | `"/sdk_prover/"` |  |
-| persistence.config.name | string | `"snarkify-scroll-proving-config"` |  |
+| persistence.config.name | string | `"snarkify-scroll-proving-agent-config"` |  |
 | persistence.config.type | string | `"configMap"` |  |
 | persistence.keys.accessMode | string | `"ReadWriteOnce"` |  |
 | persistence.keys.enabled | bool | `true` |  |

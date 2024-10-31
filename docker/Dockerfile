@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y libssl-dev ca-certificates && rm -rf /v
 RUN update-ca-certificates
 
 # Copy the built binary from the builder stage
-COPY --from=builder /usr/src/app/target/release/snarkify-scroll-proving /usr/local/bin/snarkify-scroll-proving
+COPY --from=builder /usr/src/app/target/release/snarkify-scroll-proving-agent /usr/local/bin/snarkify-scroll-proving-agent
 
 # Set the entrypoint
-ENTRYPOINT ["snarkify-scroll-proving"]
+ENTRYPOINT ["snarkify-scroll-proving-agent"]

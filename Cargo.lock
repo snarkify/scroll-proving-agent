@@ -4295,7 +4295,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "snarkify-scroll-proving"
+name = "snarkify-scroll-proving-agent"
 version = "0.0.1"
 dependencies = [
  "anyhow",

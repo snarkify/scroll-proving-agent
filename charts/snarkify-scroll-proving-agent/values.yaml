@@ -1,17 +1,17 @@
 ---
 global:
-  nameOverride: &app_name snarkify-scroll-proving
+  nameOverride: &app_name snarkify-scroll-proving-agent
   fullnameOverride: *app_name
 
 image:
-  repository: snarkify/snarkify-scroll-proving
+  repository: snarkify/snarkify-scroll-proving-agent
   pullPolicy: Always
   tag: v0.0.1
 
 command:
   - "/bin/sh"
   - "-c"
-  - "exec snarkify-scroll-proving --config /sdk_prover/config.json"
+  - "exec snarkify-scroll-proving-agent --config /sdk_prover/config.json"
 
 resources:
   requests:
@@ -26,7 +26,7 @@ persistence:
     enabled: true
     type: configMap
     mountPath: /sdk_prover/
-    name: snarkify-scroll-proving-config
+    name: snarkify-scroll-proving-agent-config
   keys:
     enabled: true
     type: pvc
