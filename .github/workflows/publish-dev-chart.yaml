@@ -6,7 +6,7 @@ on:
       - 'charts/**'
 
 env:
-  HELM_REGISTRY: ghcr.io/snarkify/snarkify-scroll-proving-agent/helm/dev
+  HELM_REGISTRY: ghcr.io/snarkify/scroll-proving-agent/helm/dev
 
 jobs:
   helm-chart-testing-dev:
@@ -34,7 +34,7 @@ jobs:
 
       - name: Helm registry login
         run: |
-          helm registry login ghcr.io/snarkify/snarkify-scroll-proving-agent/helm --username ${{ github.actor }} --password ${{ secrets.HELM_GITHUB_PASSWORD }}
+          helm registry login ghcr.io/snarkify/scroll-proving-agent/helm --username ${{ github.actor }} --password ${{ secrets.HELM_GITHUB_PASSWORD }}
         env:
           HELM_GITHUB_PASSWORD: "${{ secrets.HELM_GITHUB_PASSWORD }}"
 
@@ -74,7 +74,7 @@ jobs:
 
       - name: Helm registry login
         run: |
-          helm registry login ghcr.io/snarkify/snarkify-scroll-proving-agent/helm --username ${{ github.actor }} --password ${{ secrets.HELM_GITHUB_PASSWORD }}
+          helm registry login ghcr.io/snarkify/scroll-proving-agent/helm --username ${{ github.actor }} --password ${{ secrets.HELM_GITHUB_PASSWORD }}
         env:
           HELM_GITHUB_PASSWORD: "${{ secrets.HELM_GITHUB_PASSWORD }}"
 

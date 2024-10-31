@@ -3874,6 +3874,44 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "94143f37725109f92c262ed2cf5e59bce7498c01bcc1502d7b9afe439a4e9f49"
 
 [[package]]
+name = "scroll-proving-agent"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "async-trait",
+ "axum",
+ "base64 0.13.1",
+ "chrono",
+ "clap",
+ "ctor 0.2.8",
+ "env_logger 0.11.3",
+ "eth-keystore",
+ "ethers-core 2.0.7 (git+https://github.com/scroll-tech/ethers-rs.git?branch=v2.0.7)",
+ "ethers-providers 2.0.7 (git+https://github.com/scroll-tech/ethers-rs.git?branch=v2.0.7)",
+ "futures",
+ "halo2_proofs",
+ "hex",
+ "http 1.1.0",
+ "log",
+ "once_cell",
+ "prover",
+ "rand",
+ "reqwest 0.12.4",
+ "reqwest-middleware",
+ "reqwest-retry",
+ "rlp",
+ "scroll-proving-sdk",
+ "serde",
+ "serde_json",
+ "sled",
+ "snark-verifier-sdk",
+ "tiny-keccak",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
 name = "scroll-proving-sdk"
 version = "0.1.0"
 source = "git+https://github.com/scroll-tech/scroll-proving-sdk?rev=18aeedabdd647c9f0566c8fa801c1e76c826c287#18aeedabdd647c9f0566c8fa801c1e76c826c287"
@@ -4292,44 +4330,6 @@ dependencies = [
  "serde",
  "serde_json",
  "snark-verifier",
-]
-
-[[package]]
-name = "snarkify-scroll-proving-agent"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "async-trait",
- "axum",
- "base64 0.13.1",
- "chrono",
- "clap",
- "ctor 0.2.8",
- "env_logger 0.11.3",
- "eth-keystore",
- "ethers-core 2.0.7 (git+https://github.com/scroll-tech/ethers-rs.git?branch=v2.0.7)",
- "ethers-providers 2.0.7 (git+https://github.com/scroll-tech/ethers-rs.git?branch=v2.0.7)",
- "futures",
- "halo2_proofs",
- "hex",
- "http 1.1.0",
- "log",
- "once_cell",
- "prover",
- "rand",
- "reqwest 0.12.4",
- "reqwest-middleware",
- "reqwest-retry",
- "rlp",
- "scroll-proving-sdk",
- "serde",
- "serde_json",
- "sled",
- "snark-verifier-sdk",
- "tiny-keccak",
- "tokio",
- "tracing",
- "tracing-subscriber",
 ]
 
 [[package]]

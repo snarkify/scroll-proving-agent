@@ -1,8 +1,8 @@
-# Snarkify Scroll Proving Agent
+# Scroll Proving Agent
 
 ## Introduction
 
-The Snarkify Scroll proving agent is a high-performance service client for efficient block proving for layer-2 rollups
+The Scroll proving agent is a high-performance service client for efficient block proving for layer-2 rollups
 based on the [Scroll SDK](https://scroll-sdk-init.docs.scroll.xyz/en/sdk/). With this integration, Scroll SDK chains
 gain access to robust GPU-proving capabilities, allowing for the fast and effective proving of blockspaces.
 
@@ -14,7 +14,7 @@ Mainnet proving jobs.
 
 ## How It Works
 
-The Snarkify Scroll Proving agent integrates with the [Scroll Proving SDK](https://github.com/scroll-tech/scroll-proving-sdk) 
+The Scroll Proving agent integrates with the [Scroll Proving SDK](https://github.com/scroll-tech/scroll-proving-sdk) 
 to handle block proving in three main steps:
 
 1.	Task Retrieval: The agent connects to the coordinator endpoint to retrieve proving tasks and to the Geth endpoint 
@@ -83,30 +83,30 @@ env:
 - serviceId: Your Scroll Proving service ID in Snarkify platform.
 
 
-### Deploy Snarkify Scroll Proving Agent
+### Deploy Scroll Proving Agent
 
 Deploy the agent using Helm with your configuration files.
 ```bash
 export HELM_EXPERIMENTAL_OCI=1
-helm install snarkify-scroll-proving-agent-chunk oci://ghcr.io/snarkify/snarkify-scroll-proving-agent/helm/snarkify-scroll-proving-agent --version 0.0.1 -f chunk-config.yaml
+helm install scroll-proving-agent-chunk oci://ghcr.io/snarkify/scroll-proving-agent/helm/scroll-proving-agent --version 0.0.1 -f chunk-config.yaml
 
-helm install snarkify-scroll-proving-agent-batch oci://ghcr.io/snarkify/snarkify-scroll-proving-agent/helm/snarkify-scroll-proving-agent --version 0.0.1 -f batch-config.yaml
+helm install scroll-proving-agent-batch oci://ghcr.io/snarkify/scroll-proving-agent/helm/scroll-proving-agent --version 0.0.1 -f batch-config.yaml
 
-helm install snarkify-scroll-proving-agent-bundle oci://ghcr.io/snarkify/snarkify-scroll-proving-agent/helm/snarkify-scroll-proving-agent --version 0.0.1 -f bundle-config.yaml
+helm install scroll-proving-agent-bundle oci://ghcr.io/snarkify/scroll-proving-agent/helm/scroll-proving-agent --version 0.0.1 -f bundle-config.yaml
 ```
 
 ### Verify the Deployment
 You can verify the deployment by checking the pods and the logs.
 ```bash
 kubectl get pods
-kubectl logs -l app.kubernetes.io/name=snarkify-scroll-proving-agent
+kubectl logs -l app.kubernetes.io/name=scroll-proving-agent
 ```
 
 ### Uninstall the Helm Chart
 ```bash
-helm uninstall snarkify-scroll-proving-agent-chunk
-helm uninstall snarkify-scroll-proving-agent-batch
-helm uninstall snarkify-scroll-proving-agent-bundle
+helm uninstall scroll-proving-agent-chunk
+helm uninstall scroll-proving-agent-batch
+helm uninstall scroll-proving-agent-bundle
 ```
 
 ### Community

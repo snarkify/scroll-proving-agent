@@ -1,6 +1,6 @@
 use clap::Parser;
+use scroll_proving_agent::prover::SnarkifyProver;
 use scroll_proving_sdk::{config::Config, prover::ProverBuilder, utils::init_tracing};
-use snarkify_scroll_proving_agent::prover::SnarkifyProver;
 use std::env;
 
 #[derive(Parser, Debug)]
@@ -8,7 +8,7 @@ use std::env;
 struct Args {
     /// Path to the configuration file in JSON format.
     /// Regarding the JSON format, please refer to the README.md for the Configuration section in
-    /// https://github.com/snarkify/snarkify-scroll-proving-agent
+    /// https://github.com/snarkify/scroll-proving-agent
     #[arg(long = "config", default_value = "config.json")]
     config_file: String,
 }

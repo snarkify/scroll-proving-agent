@@ -2,7 +2,7 @@ apiVersion: v1
 entries:
   common:
   - apiVersion: v2
-    created: "2024-10-31T14:15:33.146672-07:00"
+    created: "2024-10-31T15:13:12.83655-07:00"
     description: Function library for Helm charts
     digest: 5a3fa66a5d8bcfc12029abed7a432a5275f44db7f0773d3b9f251497ad50d09c
     keywords:
@@ -15,6 +15,6 @@ entries:
     name: common
     type: library
     urls:
-    - ghcr.io/snarkify/snarkify-scroll-proving-agent/helm/snarkify-scroll-proving-agent/charts/common-1.5.1.tgz
+    - ghcr.io/snarkify/scroll-proving-agent/helm/scroll-proving-agent/charts/common-1.5.1.tgz
     version: 1.5.1
-generated: "2024-10-31T14:15:33.144904-07:00"
+generated: "2024-10-31T15:13:12.833235-07:00"
