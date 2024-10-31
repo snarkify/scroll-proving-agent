@@ -11,7 +11,7 @@ image:
 command:
   - "/bin/sh"
   - "-c"
-  - "exec snarkify-scroll-proving --config /sdk_prover/config.json --service-id {{ .Values.serviceId }}"
+  - "exec snarkify-scroll-proving --config /sdk_prover/config.json"
 
 resources:
   requests:
@@ -79,11 +79,11 @@ scrollConfig: |
 #     "n_workers": 1,
 #     "cloud": {
 #       "base_url": "https://api.snarkify.io",
-#       "api_key": <API_KEY>,
+#       "api_key": "<API_KEY>",
 #       "retry_count": 3,
 #       "retry_wait_time_sec": 5,
 #       "connection_timeout_sec": 60
 #     }
-#   }
+#   },
+#   "service_id": ""
 #  }
-serviceId: ""
