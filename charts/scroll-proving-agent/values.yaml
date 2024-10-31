@@ -26,7 +26,7 @@ persistence:
     enabled: true
     type: configMap
     mountPath: /sdk_prover/
-    name: scroll-proving-agent-config
+    name: "{{ .Release.Name }}-config"  # Change this value to <ReleaseName>-config
   keys:
     enabled: true
     type: pvc
