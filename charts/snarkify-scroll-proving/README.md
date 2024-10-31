@@ -8,7 +8,7 @@ A chart for Scroll SDK to generate proofs in Snarkify platform.
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| snarkify | <support@snarkify.io> |  |
+| snarkify | <hello@snarkify.io> |  |
 
 ## Requirements
 
@@ -29,6 +29,7 @@ Kubernetes: `>=1.22.0-0`
 | defaultProbes.enabled | bool | `true` |  |
 | defaultProbes.spec.httpGet.path | string | `"/"` |  |
 | defaultProbes.spec.httpGet.port | int | `80` |  |
+| env.serviceId | string | `""` |  |
 | global.fullnameOverride | string | `"snarkify-scroll-proving"` |  |
 | global.nameOverride | string | `"snarkify-scroll-proving"` |  |
 | image.pullPolicy | string | `"Always"` |  |

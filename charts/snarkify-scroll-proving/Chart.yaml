@@ -6,7 +6,7 @@ version: 0.0.1
 kubeVersion: ">=1.22.0-0"
 maintainers:
   - name: snarkify
-    email: support@snarkify.io
+    email: hello@snarkify.io
 dependencies:
   - name: common
     repository: "oci://ghcr.io/scroll-tech/scroll-sdk/helm"
