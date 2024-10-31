@@ -32,7 +32,7 @@ jobs:
 
       - name: Helm registry login
         run: |
-          helm registry login ghcr.io/scroll-tech/helm/scroll-sdk --username ${{ github.actor }} --password ${{ secrets.HELM_GITHUB_PASSWORD }}
+          helm registry login ghcr.io/snarkify/snarkify-scroll-proving/helm --username ${{ github.actor }} --password ${{ secrets.HELM_GITHUB_PASSWORD }}
         env:
           HELM_GITHUB_PASSWORD: "${{ secrets.HELM_GITHUB_PASSWORD }}"
 
@@ -72,7 +72,7 @@ jobs:
 
       - name: Helm registry login
         run: |
-          helm registry login ghcr.io/scroll-tech/helm/scroll-sdk --username ${{ github.actor }} --password ${{ secrets.HELM_GITHUB_PASSWORD }}
+          helm registry login ghcr.io/snarkify/snarkify-scroll-proving/helm --username ${{ github.actor }} --password ${{ secrets.HELM_GITHUB_PASSWORD }}
         env:
           HELM_GITHUB_PASSWORD: "${{ secrets.HELM_GITHUB_PASSWORD }}"
 
@@ -97,5 +97,5 @@ jobs:
             helm dependencies build charts/$chart
             helm package charts/$chart
             export CHART_VERSION=$(grep 'version:' charts/$chart/Chart.yaml | head -n1 | awk '{ print $2 }')
-            helm push $chart-${CHART_VERSION}.tgz oci://ghcr.io/scroll-tech/scroll-sdk/helm
+            helm push $chart-${CHART_VERSION}.tgz oci://ghcr.io/snarkify/snarkify-scroll-proving/helm
           done
