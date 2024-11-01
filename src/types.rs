@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Debug)]
 pub struct SnarkifyGetVkResponse {
-    /// Base64 encoded verification key.
+    /// Base64 encoded verification key, which will be used in the login request to the Scroll coordinator.
     pub vk: String,
 }
 

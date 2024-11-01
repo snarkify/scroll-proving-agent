@@ -23,7 +23,7 @@ use crate::types::{
 use serde::Serialize;
 
 /// API version used by the Snarkify platform.
-const API_VERSION: &'static str = "v1";
+const API_VERSION: &str = "v1";
 
 pub struct SnarkifyProver {
     base_url: String,
