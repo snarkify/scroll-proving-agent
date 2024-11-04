@@ -1,3 +1,7 @@
+use crate::types::{
+    SnarkifyCreateTaskInput, SnarkifyCreateTaskRequest, SnarkifyGetTaskResponse,
+    SnarkifyGetVkResponse,
+};
 use async_trait::async_trait;
 use core::time::Duration;
 use log::error;
@@ -14,11 +18,6 @@ use scroll_proving_sdk::{
         types::CircuitType,
         ProvingService,
     },
-};
-
-use crate::types::{
-    SnarkifyCreateTaskInput, SnarkifyCreateTaskRequest, SnarkifyGetTaskResponse,
-    SnarkifyGetVkResponse,
 };
 use serde::Serialize;
 
@@ -38,6 +37,7 @@ impl ProvingService for SnarkifyProver {
     fn is_local(&self) -> bool {
         false
     }
+
     async fn get_vk(&self, req: GetVkRequest) -> GetVkResponse {
         let method = format!(
             "/{}/scroll/sdk/vks/versions/{}/types/{}",
@@ -59,6 +59,7 @@ impl ProvingService for SnarkifyProver {
             }
         }
     }
+
     async fn prove(&self, req: ProveRequest) -> ProveResponse {
         let body = SnarkifyCreateTaskRequest::from_prove_request(&req);
         let method = format!("/{}/services/{}", API_VERSION, &self.service_id);
