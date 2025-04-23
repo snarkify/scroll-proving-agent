@@ -1,8 +1,6 @@
 use crate::config::SnarkifyConfig;
-use crate::types::{
-    SnarkifyCreateTaskInput, SnarkifyCreateTaskRequest, SnarkifyGetTaskResponse,
-    SnarkifyGetVkResponse,
-};
+use crate::task_state::SnarkifyTaskState;
+use crate::types::{SnarkifyCreateTaskRequest, SnarkifyGetTaskResponse, SnarkifyGetVkResponse};
 use anyhow::{anyhow, bail, Result};
 use async_trait::async_trait;
 use core::time::Duration;
@@ -65,10 +63,18 @@ impl ProvingService for SnarkifyProver {
                 error: None,
             },
             Err(e) => {
-                error!("[Snarkify Client][get_vks] Failed to get vks: {:?}", e);
+                error!(
+                    "[Snarkify Client][get_vks] Failed to get vks for proof type {}: {:?}",
+                    req.proof_types[0].to_u8(),
+                    e
+                );
                 GetVkResponse {
                     vks: vec![],
-                    error: Some(format!("Failed to get vks: {}", e)),
+                    error: Some(format!(
+                        "Failed to get vks: {} for proof type {}",
+                        e,
+                        req.proof_types[0].to_u8()
+                    )),
                 }
             }
         }
@@ -118,47 +124,124 @@ impl ProvingService for SnarkifyProver {
     }
 
     async fn query_task(&mut self, req: QueryTaskRequest) -> QueryTaskResponse {
-        // TODO: Query task result from S3 directly.
-        let method = format!("/{}/tasks/{}", API_VERSION, &req.task_id);
+        let task_id = req.task_id.clone();
+        let method = format!("/{}/tasks/{}?only_urls=true", API_VERSION, &task_id);
         match self.get::<SnarkifyGetTaskResponse>(&method).await {
             Ok(resp) => {
-                let task_input: SnarkifyCreateTaskInput = match serde_json::from_str(&resp.input) {
-                    Ok(input) => input,
-                    Err(e) => {
-                        return self.build_query_task_error_response(
-                            &req,
-                            &format!("Failed to parse task input: {}", e),
-                        )
-                    }
-                };
+                let created_at = resp.created.map(|t| t.timestamp() as f64).unwrap_or(0.0);
                 let started_at = resp.started.map(|t| t.timestamp() as f64);
                 let finished_at = resp.finished.map(|t| t.timestamp() as f64);
                 let compute_time_sec = match (started_at, finished_at) {
                     (Some(started), Some(finished)) => Some(finished - started),
                     _ => None,
                 };
-                QueryTaskResponse {
-                    task_id: resp.task_id,
-                    proof_type: resp.proof_type.into(),
-                    circuit_version: task_input.circuit_version,
-                    hard_fork_name: task_input.hard_fork_name,
-                    status: resp.state.into(),
-                    created_at: resp.created.map(|t| t.timestamp() as f64).unwrap_or(0.0),
-                    started_at,
-                    finished_at,
-                    compute_time_sec,
-                    input: Some(task_input.task_data),
-                    proof: resp.proof,
-                    vk: None,
-                    error: resp.error,
+                // We don't care about circuit version, hard fork name, proof type, input, vk, error here.
+                let circuit_version = "".to_string();
+                let hard_fork_name = "".to_string();
+                let proof_type = ProofType::Undefined;
+                let input = None;
+                let vk = None;
+                match resp.state {
+                    SnarkifyTaskState::Unassigned | SnarkifyTaskState::Pending => {
+                        QueryTaskResponse {
+                            task_id,
+                            proof_type,
+                            circuit_version,
+                            hard_fork_name,
+                            status: TaskStatus::Proving,
+                            created_at,
+                            started_at,
+                            finished_at,
+                            compute_time_sec,
+                            input,
+                            proof: None,
+                            vk,
+                            error: None,
+                        }
+                    }
+                    SnarkifyTaskState::Success => match resp.proof_url {
+                        Some(proof_url) => match self.download_blob(&proof_url).await {
+                            Ok(proof) => QueryTaskResponse {
+                                task_id,
+                                proof_type,
+                                circuit_version,
+                                hard_fork_name,
+                                status: TaskStatus::Success,
+                                created_at,
+                                started_at,
+                                finished_at,
+                                compute_time_sec,
+                                input,
+                                proof: Some(proof),
+                                vk,
+                                error: None,
+                            },
+                            Err(e) => {
+                                error!(
+                                        "[Snarkify Client][query_task] Failed to download proof url for task {}: {:?}",
+                                        task_id, e
+                                    );
+                                return self.build_query_task_error_response(
+                                    &req,
+                                    &format!(
+                                        "Failed to download proof for task {}: {}",
+                                        task_id, e
+                                    ),
+                                );
+                            }
+                        },
+                        None => {
+                            error!(
+                                "[Snarkify Client][query_task] No proof url found for task {}   ",
+                                task_id
+                            );
+                            return self.build_query_task_error_response(
+                                &req,
+                                &format!("No proof url found for task {}", task_id),
+                            );
+                        }
+                    },
+                    SnarkifyTaskState::Failure => match resp.error_url {
+                        Some(error_url) => match self.download_blob(&error_url).await {
+                            Ok(error) => {
+                                return self.build_query_task_error_response(&req, &error);
+                            }
+                            Err(e) => {
+                                error!(
+                                        "[Snarkify Client][query_task] Failed to download error url for task {}: {:?}",
+                                        task_id, e
+                                    );
+                                return self.build_query_task_error_response(
+                                    &req,
+                                    &format!(
+                                        "Failed to download error url for task {}: {}",
+                                        task_id, e
+                                    ),
+                                );
+                            }
+                        },
+                        None => {
+                            error!(
+                                "[Snarkify Client][query_task] No error url found for task {}",
+                                task_id
+                            );
+                            return self.build_query_task_error_response(
+                                &req,
+                                &format!("No error url found for task {}", task_id),
+                            );
+                        }
+                    },
                 }
             }
             Err(e) => {
                 error!(
-                    "[Snarkify Client][query_task] Failed to query proof: {:?}",
-                    e
+                    "[Snarkify Client][query_task] Failed to query for task {}: {:?}",
+                    task_id, e
                 );
-                self.build_query_task_error_response(&req, &format!("Failed to query proof: {}", e))
+                self.build_query_task_error_response(
+                    &req,
+                    &format!("Failed to query for task {}: {}", task_id, e),
+                )
             }
         }
     }
@@ -289,5 +372,54 @@ impl SnarkifyProver {
         info!("[Snarkify Client], {method}, received response");
         debug!("[Snarkify Client], {method}, response: {response_body}");
         serde_json::from_str(&response_body).map_err(|e| anyhow!(e))
+    }
+
+    async fn download_blob(&self, url: &str) -> Result<String> {
+        let response = match self
+            .client
+            .get(url)
+            .timeout(self.connection_timeout_sec)
+            .send()
+            .await
+        {
+            Ok(res) => res,
+            Err(e) => {
+                debug!(
+                    "[Snarkify Client][download_blob] Failed to send request {}: {:#?}",
+                    url, e
+                );
+                bail!(
+                    "[Snarkify Client][download_blob] Failed to send request {}: {}",
+                    url,
+                    e
+                )
+            }
+        };
+
+        let status = response.status();
+        if !status.is_success() {
+            let error_text = response
+                .text()
+                .await
+                .unwrap_or_else(|_| "Failed to read error message".to_string());
+            bail!(
+                "[Snarkify Client][download_blob] Failed with status {}: {}. Error: {}",
+                url,
+                status,
+                error_text
+            );
+        }
+
+        response.text().await.map_err(|e| {
+            debug!(
+                "[Snarkify Client][download_blob] Failed to parse from {}: {:#?}",
+                url, e
+            );
+            anyhow!(
+                "[Snarkify Client][download_blob] Failed to parse from {}: {}",
+                url,
+                e
+            )
+        })
     }
 }

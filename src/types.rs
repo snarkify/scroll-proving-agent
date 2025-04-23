@@ -23,11 +23,9 @@ pub struct SnarkifyGetTaskResponse {
     #[serde(deserialize_with = "deserialize_datetime")]
     pub finished: Option<DateTime<Utc>>,
     pub state: SnarkifyTaskState,
-    /// Task input data necessary for the proof generation.
-    pub input: String,
-    /// Serialized JSON string including the base64 encoded proof and its metadata.
-    pub proof: Option<String>,
-    pub error: Option<String>,
+    pub input_url: Option<String>,
+    pub proof_url: Option<String>,
+    pub error_url: Option<String>,
     pub proof_type: SnarkifyProofType,
 }
 
