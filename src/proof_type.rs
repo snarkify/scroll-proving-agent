@@ -1,4 +1,4 @@
-use scroll_proving_sdk::prover::types::CircuitType;
+use scroll_proving_sdk::prover::types::ProofType;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -9,13 +9,25 @@ pub enum SnarkifyProofType {
     Bundle,
 }
 
-impl From<CircuitType> for SnarkifyProofType {
-    fn from(circuit_type: CircuitType) -> Self {
-        match circuit_type {
-            CircuitType::Chunk => SnarkifyProofType::Chunk,
-            CircuitType::Batch => SnarkifyProofType::Batch,
-            CircuitType::Bundle => SnarkifyProofType::Bundle,
-            CircuitType::Undefined => unreachable!("CircuitType::Undefined should not be used"),
+impl TryFrom<ProofType> for SnarkifyProofType {
+    type Error = anyhow::Error;
+
+    fn try_from(proof_type: ProofType) -> Result<Self, Self::Error> {
+        match proof_type {
+            ProofType::Chunk => Ok(SnarkifyProofType::Chunk),
+            ProofType::Batch => Ok(SnarkifyProofType::Batch),
+            ProofType::Bundle => Ok(SnarkifyProofType::Bundle),
+            ProofType::Undefined => Err(anyhow::anyhow!("ProofType::Undefined should not be used")),
+        }
+    }
+}
+
+impl From<SnarkifyProofType> for ProofType {
+    fn from(proof_type: SnarkifyProofType) -> Self {
+        match proof_type {
+            SnarkifyProofType::Chunk => ProofType::Chunk,
+            SnarkifyProofType::Batch => ProofType::Batch,
+            SnarkifyProofType::Bundle => ProofType::Bundle,
         }
     }
 }
