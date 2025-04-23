@@ -2,7 +2,7 @@
 apiVersion: v2
 description: A proving agent for Scroll SDK to generate proofs in Snarkify platform.
 name: scroll-proving-agent
-version: 0.0.1
+version: 1.0.0
 kubeVersion: ">=1.22.0-0"
 maintainers:
   - name: snarkify

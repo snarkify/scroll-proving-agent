@@ -1,15 +1,15 @@
 use crate::datetime_utils::deserialize_datetime;
 use crate::proof_type::SnarkifyProofType;
 use crate::task_state::SnarkifyTaskState;
+use anyhow::Result;
 use chrono::{DateTime, Utc};
 use scroll_proving_sdk::prover::proving_service::ProveRequest;
-use scroll_proving_sdk::prover::types::CircuitType;
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Debug)]
 pub struct SnarkifyGetVkResponse {
     /// Base64 encoded verification key, which will be used in the login request to the Scroll coordinator.
-    pub vk: String,
+    pub vks: Vec<String>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -23,17 +23,14 @@ pub struct SnarkifyGetTaskResponse {
     #[serde(deserialize_with = "deserialize_datetime")]
     pub finished: Option<DateTime<Utc>>,
     pub state: SnarkifyTaskState,
-    /// Task input data necessary for the proof generation.
-    pub input: String,
-    /// Serialized JSON string including the base64 encoded proof and its metadata.
-    pub proof: Option<String>,
-    pub error: Option<String>,
-    pub proof_type: Option<SnarkifyProofType>,
+    pub input_url: Option<String>,
+    pub proof_url: Option<String>,
+    pub error_url: Option<String>,
+    pub proof_type: SnarkifyProofType,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct SnarkifyCreateTaskInput {
-    pub circuit_type: CircuitType,
     pub circuit_version: String,
     pub hard_fork_name: String,
     pub task_data: String,
@@ -46,15 +43,17 @@ pub struct SnarkifyCreateTaskRequest {
 }
 
 impl SnarkifyCreateTaskRequest {
-    pub fn from_prove_request(request: &ProveRequest) -> Self {
-        Self {
+    pub fn from_prove_request(request: &ProveRequest) -> Result<Self> {
+        Ok(Self {
             input: SnarkifyCreateTaskInput {
-                circuit_type: request.circuit_type,
                 circuit_version: request.circuit_version.clone(),
                 hard_fork_name: request.hard_fork_name.clone(),
                 task_data: request.input.clone(),
             },
-            proof_type: request.circuit_type.into(),
-        }
+            proof_type: request
+                .proof_type
+                .try_into()
+                .map_err(|e| anyhow::anyhow!("Failed to convert proof type: {}", e))?,
+        })
     }
 }
