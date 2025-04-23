@@ -74,7 +74,7 @@ scrollConfig: |
 
 ```
 
-- prover_name_prefix: A prefix for your prover name, should end with an underscore.
+- prover_name_prefix: A prefix for your prover name.
 - coordinator.base_url: Your coordinator endpoint.
 - l2geth.endpoint: Your Geth endpoint.
 - prover.circuit_type: The circuit type is 2 (OpenVm), which is the latest circuit type.

@@ -81,7 +81,7 @@ impl ProvingService for SnarkifyProver {
     }
 
     async fn prove(&mut self, req: ProveRequest) -> ProveResponse {
-        // Send input to S3 directly.
+        // TODO: Send input to S3 directly.
         let body = match SnarkifyCreateTaskRequest::from_prove_request(&req) {
             Ok(body) => body,
             Err(e) => {
