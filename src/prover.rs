@@ -75,6 +75,7 @@ impl ProvingService for SnarkifyProver {
     }
 
     async fn prove(&mut self, req: ProveRequest) -> ProveResponse {
+        // Send input to S3 directly.
         let body = match SnarkifyCreateTaskRequest::from_prove_request(&req) {
             Ok(body) => body,
             Err(e) => {
@@ -117,6 +118,7 @@ impl ProvingService for SnarkifyProver {
     }
 
     async fn query_task(&mut self, req: QueryTaskRequest) -> QueryTaskResponse {
+        // TODO: Query task result from S3 directly.
         let method = format!("/{}/tasks/{}", API_VERSION, &req.task_id);
         match self.get::<SnarkifyGetTaskResponse>(&method).await {
             Ok(resp) => {

@@ -45,42 +45,44 @@ Here is the example of `chunk-config.yaml`, replacing placeholders as needed:
 ```yaml
 scrollConfig: |
   {
-    "prover_name_prefix": "<Your-Prover-Name-Prefix>",
-    "keys_dir": "/keys",
-    "coordinator": {
-      "base_url": "<Your-Coordinator-Endpoint>",
-      "retry_count": 3,
-      "retry_wait_time_sec": 5,
-      "connection_timeout_sec": 60
-    },
-    "l2geth": {
-      "endpoint": "<Your-Geth-Endpoint>"
-    },
-    "prover": {
-      "circuit_type": 1,
-      "circuit_version": "v0.13.1",
-      "n_workers": <Your-Number-Of-Workers>,
-      "cloud": {
-        "base_url": "https://api.snarkify.io",
-        "api_key": "<Your-API-Key>",
+    "sdk_config": {
+      "prover_name_prefix": "<Your-Prover-Name-Prefix>",
+      "keys_dir": "/keys",
+      "db_path": "/db",
+      "coordinator": {
+        "base_url": "<Your-Coordinator-Endpoint>",
         "retry_count": 3,
         "retry_wait_time_sec": 5,
         "connection_timeout_sec": 60
+      },
+      "l2geth": {
+        "endpoint": "<Your-Geth-Endpoint>"
+      },
+      "prover": {
+        "circuit_type": 2,
+        "circuit_version": "v0.13.1",
+        "supported_proof_types": [
+            1
+        ],
+        "n_workers": <Your-Number-Of-Workers>,  
       }
-    }
+    },
+    "base_url": "https://api.snarkify.io",
+    "api_key": "<YOUR_API_KEY>",
+    "service_id": "<YOUR_SERVICE_ID>"
   }
 
-env:
-  serviceId: "<Your-Service-ID>"
 ```
 
 - prover_name_prefix: A prefix for your prover name, should end with an underscore.
 - coordinator.base_url: Your coordinator endpoint.
 - l2geth.endpoint: Your Geth endpoint.
-- prover.circuit_type: The circuit type, can be 1 (Chunk), 2 (Batch) or 3 (Bundle).
+- prover.circuit_type: The circuit type is 2 (OpenVm), which is the latest circuit type.
+- prover.supported_proof_types: A list of proof types, can be 1 (Chunk), 2 (Batch) or 3 (Bundle). Now we only support 
+1 proof type in a config.
 - prover.n_workers: The number of workers to run in parallel.
-- cloud.api_key: Your Snarkify API key.
-- serviceId: Your Scroll Proving service ID in Snarkify platform.
+- api_key: Your Snarkify API key.
+- service_id: Your Scroll Proving service ID in Snarkify platform.
 
 
 ### Deploy Scroll Proving Agent
@@ -88,11 +90,11 @@ env:
 Deploy the agent using Helm with your configuration files.
 ```bash
 export HELM_EXPERIMENTAL_OCI=1
-helm install scroll-proving-agent-chunk oci://ghcr.io/snarkify/scroll-proving-agent/helm/scroll-proving-agent --version 0.0.1 -f chunk-config.yaml
+helm install scroll-proving-agent-chunk oci://ghcr.io/snarkify/scroll-proving-agent/helm/scroll-proving-agent --version 1.0.0 -f chunk-config.yaml
 
-helm install scroll-proving-agent-batch oci://ghcr.io/snarkify/scroll-proving-agent/helm/scroll-proving-agent --version 0.0.1 -f batch-config.yaml
+helm install scroll-proving-agent-batch oci://ghcr.io/snarkify/scroll-proving-agent/helm/scroll-proving-agent --version 1.0.0 -f batch-config.yaml
 
-helm install scroll-proving-agent-bundle oci://ghcr.io/snarkify/scroll-proving-agent/helm/scroll-proving-agent --version 0.0.1 -f bundle-config.yaml
+helm install scroll-proving-agent-bundle oci://ghcr.io/snarkify/scroll-proving-agent/helm/scroll-proving-agent --version 1.0.0 -f bundle-config.yaml
 ```
 
 ### Verify the Deployment
